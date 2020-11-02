@@ -1,7 +1,7 @@
 const pjson = require('./../package.json');
 const express = require('express');
 const responseTime = require('response-time');
-
+const os = require('os');
 
 const app = express();
 app.use(express.json());
@@ -12,7 +12,8 @@ app.use(responseTime());
 app.get('/', (req,res)=> {
   let apiMetadata = {
     name: pjson.name,
-    version: pjson.version
+    version: pjson.version,
+    hostname: os.hostname()
   }
   res.send(apiMetadata);
 });
