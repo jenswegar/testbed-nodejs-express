@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: testbednodejsexpress 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testbednodejsexpress
+  template:
+    metadata:
+      labels:
+        app: testbednodejsexpress 
+    spec:
+      containers:
+        - name: testbednodejsexpress 
+          image: locotechtestbed.azurecr.io/testbednodejsexpress
+          ports:
+          - containerPort: 8080
