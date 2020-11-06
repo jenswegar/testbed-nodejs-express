@@ -4,7 +4,5 @@ metadata:
     name: testbednodejsexpress
 spec:
     type: ClusterIP
-    ports:
-    - port: 8080
     selector:
         app: testbednodejsexpress
