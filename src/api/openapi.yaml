@@ -1,0 +1,227 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: jens.wegar@gmail.com
+    name: Jens Wegar
+  description: API for Testbed project.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Testbed API
+  version: 1.0.0
+  x-logo:
+    url: ""
+servers:
+- description: Local development server
+  url: http://localhost:8080
+paths:
+  /:
+    get:
+      operationId: appMetadata
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppMetadata'
+          description: Successful operation
+      tags:
+      - App metadata
+      x-eov-operation-handler: controllers/AppMetadataController
+    summary: Returns public metadata about the API
+  /questions:
+    get:
+      operationId: getQuestions
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Question'
+                minItems: 0
+                type: array
+          description: Return list of questions
+      tags:
+      - Questions
+      x-eov-operation-handler: controllers/QuestionsController
+    post:
+      operationId: createQuestion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionRequest'
+        description: Create a new question
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: Created
+      tags:
+      - Questions
+      x-eov-operation-handler: controllers/QuestionsController
+    summary: Handles quiz questions
+  /questions/{id}:
+    delete:
+      operationId: deleteQuestion
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        style: simple
+      responses:
+        "204":
+          description: Deleted
+      tags:
+      - Questions
+      x-eov-operation-handler: controllers/QuestionsController
+    get:
+      operationId: getQuestion
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: Updated
+      tags:
+      - Questions
+      x-eov-operation-handler: controllers/QuestionsController
+    put:
+      operationId: updateQuestion
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionRequest'
+        description: Update an existing question
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: Updated
+      tags:
+      - Questions
+      x-eov-operation-handler: controllers/QuestionsController
+  /questions/random:
+    get:
+      operationId: getRandomQuestion
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: Return a random question
+      tags:
+      - Questions
+      x-eov-operation-handler: controllers/QuestionsController
+components:
+  parameters:
+    PathId:
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+      style: simple
+  responses: {}
+  schemas:
+    Id:
+      description: A unique identifier for this entity
+      example: 1234
+      format: int64
+      minimum: 1
+      type: integer
+    Created:
+      description: The date/time when the entity was created
+      example: 2020-03-20T09:12:28Z
+      format: date-time
+      type: string
+    Modified:
+      description: The date/time when the entity was last modified
+      example: 2020-03-20T15:12:28Z
+      format: date-time
+      type: string
+    QuestionRequest:
+      example:
+        text: What is the size of the universe?
+      properties:
+        text:
+          description: The text of the question to ask
+          example: What is the size of the universe?
+          minLength: 1
+          type: string
+      required:
+      - text
+    QuestionReadOnly:
+      properties:
+        id:
+          description: A unique identifier for this entity
+          example: 1234
+          format: int64
+          minimum: 1
+          type: integer
+        created:
+          description: The date/time when the entity was created
+          example: 2020-03-20T09:12:28Z
+          format: date-time
+          type: string
+        modified:
+          description: The date/time when the entity was last modified
+          example: 2020-03-20T15:12:28Z
+          format: date-time
+          type: string
+    Question:
+      allOf:
+      - $ref: '#/components/schemas/QuestionReadOnly'
+      - $ref: '#/components/schemas/QuestionRequest'
+    AppMetadata:
+      description: Represents basic metadata about the API.
+      example:
+        hostname: somehostname
+        name: testbed-java-spring-boot
+        version: 1.2.3
+      properties:
+        name:
+          description: The name of the API implementation
+          example: testbed-java-spring-boot
+          type: string
+        version:
+          description: The version of the API implementation. Should follow SemVer
+            standard.
+          example: 1.2.3
+          type: string
+        hostname:
+          description: The hostname that this instance of the API is running on.
+          example: somehostname
+          type: string
+      type: object
+  securitySchemes: {}
