@@ -42,7 +42,7 @@ stages:
       inputs:
         scanType: 'images'
         twistlockService: 'twistme locotech'
-        artifact: $(imageRepository):$(tag)
+        artifact: $(containerRegistry)/$(imageRepository):$(tag)
     - task: Docker@2
       displayName: Push the image to the registry
       inputs:
